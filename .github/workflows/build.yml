@@ -46,8 +46,15 @@ jobs:
             ~/.gradle/caches/build-cache-*
           key: gradle-${{ hashFiles('checksum.txt') }}
 
-      - name: Build, lint and spotless
-        run: ./gradlew spotlessCheck assemble assembleAndroidTest lintDebug apiCheck --scan
+      - name: Build
+        run: ./gradlew build --scan
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: "**/build/reports"
 
       - name: Clean secrets
         if: always()
