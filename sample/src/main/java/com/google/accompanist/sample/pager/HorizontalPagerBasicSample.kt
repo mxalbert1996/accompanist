@@ -19,11 +19,14 @@ package com.google.accompanist.sample.pager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -92,12 +95,34 @@ private fun Sample() {
                     .weight(1f)
                     .fillMaxWidth()
             ) { page ->
-                PagerSampleItem(
-                    page = page,
-                    modifier = Modifier
+                Row(
+                    Modifier
                         .fillMaxWidth(0.8f)
                         .aspectRatio(1f)
-                )
+                        .horizontalScroll(rememberScrollState())
+                ) {
+                    PagerSampleItem(
+                        page = page,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .aspectRatio(1f)
+                    )
+
+                    PagerSampleItem(
+                        page = page,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .aspectRatio(1f)
+                    )
+
+                    PagerSampleItem(
+                        page = page,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .aspectRatio(1f)
+                    )
+                }
+
             }
 
             ActionsRow(

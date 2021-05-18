@@ -38,6 +38,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollDispatcher
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.ParentDataModifier
@@ -51,6 +56,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
@@ -286,7 +292,10 @@ internal fun Pager(
                     }
                     Box(
                         contentAlignment = Alignment.Center,
-                        modifier = itemSemantics.then(PageData(page))
+                        modifier =
+                        itemSemantics
+                            .then(PageData(page))
+                            .nestedScroll(connection = ConsumeFlingNestedScrollConnection)
                     ) {
                         val scope = remember(this, state) {
                             PagerScopeImpl(this, state)
@@ -350,6 +359,21 @@ internal fun Pager(
                 )
             }
         }
+    }
+}
+
+private object ConsumeFlingNestedScrollConnection : NestedScrollConnection {
+    override fun onPostScroll(
+        consumed: Offset,
+        available: Offset,
+        source: NestedScrollSource
+    ): Offset = when (source) {
+        NestedScrollSource.Fling -> available
+        else -> Offset.Zero
+    }
+
+    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+        return available
     }
 }
 
