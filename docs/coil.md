@@ -6,7 +6,7 @@ This library provides easy-to-use [Painter][painter] which can fetch and display
 
 <img src="https://coil-kt.github.io/coil/logo.svg" width="480" alt="Coil logo">
 
-!!! info
+??? info "Migrating from CoilImage"
     If you're migrating from Accompanist 0.7.x or before, please read the [migration](./migration-coilimage) documentation after reading this document.
 
 ## `rememberCoilPainter()`
@@ -20,7 +20,6 @@ import com.google.accompanist.coil.rememberCoilPainter
 Image(
     painter = rememberCoilPainter("https://picsum.photos/300/300"),
     contentDescription = stringResource(R.string.image_content_desc),
-    previewPlaceholder = R.drawable.placeholder,
 )
 ```
 
@@ -80,7 +79,7 @@ Box {
     )
 
     when (painter.loadState) {
-        ImageLoadState.Loading -> {
+        is ImageLoadState.Loading -> {
             // Display a circular progress indicator whilst loading
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
